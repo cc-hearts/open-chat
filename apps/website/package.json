@@ -9,7 +9,10 @@
     "preview": "vp preview"
   },
   "dependencies": {
+    "@antdv-next/x": "catalog:",
+    "@antdv-next/x-markdown": "catalog:",
     "@antdv-next/x-sdk": "catalog:",
+    "antdv-next": "catalog:",
     "vue": "catalog:"
   },
   "devDependencies": {
