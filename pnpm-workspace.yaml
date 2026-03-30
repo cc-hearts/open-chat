@@ -4,17 +4,20 @@ packages:
   - tools/*
 
 catalog:
+  "@antdv-next/icons": ^1.0.5
   "@antdv-next/x": ^0.0.1
-  "@antdv-next/x-markdown": ^0.0.1
+  "@antdv-next/x-markdown": ^0.0.2
   "@antdv-next/x-sdk": ^0.0.1
-  "antdv-next": 1.1.7
+  "@lobehub/icons": ^5.2.0
   "@types/cors": ^2.8.19
   "@types/express": ^5.0.6
   "@types/node": ^24.12.0
+  "antdv-next": 1.1.7
   cors: ^2.8.6
   dotenv: ^17.3.1
   express: ^5.2.1
   typescript: ^5
+  unocss: ^66.6.7
   vite: npm:@voidzero-dev/vite-plus-core@latest
   vite-plus: latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
