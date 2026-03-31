@@ -10,8 +10,8 @@ catalogs:
       specifier: ^1.0.5
       version: 1.0.5
     '@antdv-next/x':
-      specifier: ^0.0.2
-      version: 0.0.2
+      specifier: ^0.0.3
+      version: 0.0.3
     '@antdv-next/x-markdown':
       specifier: ^0.0.2
       version: 0.0.2
@@ -130,7 +130,7 @@ importers:
     dependencies:
       '@antdv-next/x':
         specifier: 'catalog:'
-        version: 0.0.2(antdv-next@1.1.7(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))
+        version: 0.0.3(antdv-next@1.1.7(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))
       '@antdv-next/x-markdown':
         specifier: 'catalog:'
         version: 0.0.2(vue@3.5.31(typescript@5.9.3))
@@ -217,8 +217,8 @@ packages:
     peerDependencies:
       vue: '>=3.5.0'
 
-  '@antdv-next/x@0.0.2':
-    resolution: {integrity: sha512-/p7ThpXvHEKpBIOK8VvHvw/+6ZtJ0DL0LAZ3zzlnm8y/etnwsg7gu2pRJ/Q8C3X45/fJy0Gm3GCMJBoE1os7NQ==}
+  '@antdv-next/x@0.0.3':
+    resolution: {integrity: sha512-Izgb/QItk5l1gk4uklShwSnLZWJPL4IjPUpAxAFNLZ3hbIlbDhOrQ8lX4QkI7fmm760BXImyF0mIvywnipwQWw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       antdv-next: '>=1.0.0'
@@ -2959,7 +2959,7 @@ snapshots:
     dependencies:
       vue: 3.5.31(typescript@5.9.3)
 
-  '@antdv-next/x@0.0.2(antdv-next@1.1.7(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))':
+  '@antdv-next/x@0.0.3(antdv-next@1.1.7(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))':
     dependencies:
       '@ant-design/fast-color': 3.0.1
       '@antdv-next/cssinjs': 1.0.6(vue@3.5.31(typescript@5.9.3))

@@ -160,13 +160,6 @@ app.get("/api/models", (req: Request, res: Response) => {
     });
   }
 
-  if (AI_PROVIDERS.openai.apiKey) {
-    providers.push({
-      name: "openai",
-      models: ["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo", "gpt-4o"],
-    });
-  }
-
   res.json({ providers });
 });
 

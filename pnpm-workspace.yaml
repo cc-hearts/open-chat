@@ -5,7 +5,7 @@ packages:
 
 catalog:
   "@antdv-next/icons": ^1.0.5
-  "@antdv-next/x": ^0.0.2
+  "@antdv-next/x": ^0.0.3
   "@antdv-next/x-markdown": ^0.0.2
   "@antdv-next/x-sdk": ^0.0.1
   "@lobehub/icons": ^5.2.0

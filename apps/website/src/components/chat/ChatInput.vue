@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import type { VNode } from "vue";
 import { Sender } from "@antdv-next/x";
 
 interface Props {
   modelValue: string;
   loading: boolean;
-  prefix?: () => VNode;
 }
 
 interface Emits {
@@ -41,8 +39,11 @@ const handleCancel = () => {
       :on-cancel="handleCancel"
       :on-change="handleChange"
       :on-submit="handleSubmit"
-      :prefix="prefix"
-    />
+    >
+      <template v-if="$slots.prefix" #prefix>
+        <slot name="prefix" />
+      </template>
+    </Sender>
   </div>
 </template>
 
