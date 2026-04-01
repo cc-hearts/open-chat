@@ -349,7 +349,7 @@ const handleModelChange: MenuProps["onClick"] = ({ key }) => {
   <div class="chat-layout">
     <!-- 左侧边栏 - 对话列表 -->
     <ChatSidebar
-      v-model:open="conversationsOpen"
+      :open="conversationsOpen"
       :conversation-list="conversationList"
       :current-key="currentConversationKey"
       @new-conversation="handleNewConversation"
