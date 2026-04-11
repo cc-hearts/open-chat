@@ -86,12 +86,12 @@ const handlePromptClick = (info: any) => {
 }
 
 .messages-wrapper::-webkit-scrollbar-thumb {
-  background: #d9d9d9;
+  background: var(--brand-gray-100);
   border-radius: 3px;
 }
 
 .messages-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #bfbfbf;
+  background: var(--brand-gray-400);
 }
 
 /* XMarkdown 样式 */

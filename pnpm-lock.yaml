@@ -10,14 +10,14 @@ catalogs:
       specifier: ^1.0.5
       version: 1.0.5
     '@antdv-next/x':
-      specifier: ^0.0.3
-      version: 0.0.3
+      specifier: ^0.3.0
+      version: 0.3.0
     '@antdv-next/x-markdown':
       specifier: ^0.0.2
       version: 0.0.2
     '@antdv-next/x-sdk':
-      specifier: ^0.0.1
-      version: 0.0.1
+      specifier: ^0.0.2
+      version: 0.0.2
     '@types/cors':
       specifier: ^2.8.19
       version: 2.8.19
@@ -39,6 +39,9 @@ catalogs:
     express:
       specifier: ^5.2.1
       version: 5.2.1
+    install:
+      specifier: ^0.13.0
+      version: 0.13.0
     typescript:
       specifier: ^5
       version: 5.9.3
@@ -62,7 +65,7 @@ importers:
     dependencies:
       '@antdv-next/x-sdk':
         specifier: 'catalog:'
-        version: 0.0.1(vue@3.5.31(typescript@5.9.3))
+        version: 0.0.2(vue@3.5.31(typescript@5.9.3))
       vue:
         specifier: 'catalog:'
         version: 3.5.31(typescript@5.9.3)
@@ -96,7 +99,7 @@ importers:
     dependencies:
       '@antdv-next/x-sdk':
         specifier: 'catalog:'
-        version: 0.0.1(vue@3.5.31(typescript@5.9.3))
+        version: 0.0.2(vue@3.5.31(typescript@5.9.3))
       cors:
         specifier: 'catalog:'
         version: 2.8.6
@@ -130,16 +133,19 @@ importers:
     dependencies:
       '@antdv-next/x':
         specifier: 'catalog:'
-        version: 0.0.3(antdv-next@1.1.7(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))
+        version: 0.3.0(antdv-next@1.1.7(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))
       '@antdv-next/x-markdown':
         specifier: 'catalog:'
         version: 0.0.2(vue@3.5.31(typescript@5.9.3))
       '@antdv-next/x-sdk':
         specifier: 'catalog:'
-        version: 0.0.1(vue@3.5.31(typescript@5.9.3))
+        version: 0.0.2(vue@3.5.31(typescript@5.9.3))
       antdv-next:
         specifier: 'catalog:'
         version: 1.1.7(vue@3.5.31(typescript@5.9.3))
+      install:
+        specifier: 'catalog:'
+        version: 0.13.0
       vue:
         specifier: 'catalog:'
         version: 3.5.31(typescript@5.9.3)
@@ -212,13 +218,13 @@ packages:
     peerDependencies:
       vue: '>=3.5.0'
 
-  '@antdv-next/x-sdk@0.0.1':
-    resolution: {integrity: sha512-OLiP9NYJboBPzxSi0HVgsYFvK5sndYzCvHDwAb7AY2PIHYq9FnmHxjUj5BYUdB04kDxrhFVz8jb5NDOAzhROYA==}
+  '@antdv-next/x-sdk@0.0.2':
+    resolution: {integrity: sha512-oN6T49WwhMFV36UFjO8gomvu/0//2kDfcnE5nEz470kHakOp/LkJCwHTg3pa6unLUBbkBvrb8iz4PJftZFVeBg==}
     peerDependencies:
       vue: '>=3.5.0'
 
-  '@antdv-next/x@0.0.3':
-    resolution: {integrity: sha512-Izgb/QItk5l1gk4uklShwSnLZWJPL4IjPUpAxAFNLZ3hbIlbDhOrQ8lX4QkI7fmm760BXImyF0mIvywnipwQWw==}
+  '@antdv-next/x@0.3.0':
+    resolution: {integrity: sha512-lzfYzKcXh5Ydb/8WGUMfq+Ft/jVFH/Dvm/Lou1K9OO0NQvnVofsZkmQ6RyezRrnnrC4S/QR0pfX6DrE9Bvc3ZA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       antdv-next: '>=1.0.0'
@@ -2193,6 +2199,10 @@ packages:
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
+  install@0.13.0:
+    resolution: {integrity: sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==}
+    engines: {node: '>= 0.10'}
+
   internmap@1.0.1:
     resolution: {integrity: sha512-lDB5YccMydFBtasVtxnZ3MRBHuaoE8GKsppq+EchKL2U4nK/DmEpPHNH8MZe5HkMtpSiTSOZwfN0tzYjO/lJEw==}
 
@@ -2955,11 +2965,11 @@ snapshots:
       marked: 12.0.2
       vue: 3.5.31(typescript@5.9.3)
 
-  '@antdv-next/x-sdk@0.0.1(vue@3.5.31(typescript@5.9.3))':
+  '@antdv-next/x-sdk@0.0.2(vue@3.5.31(typescript@5.9.3))':
     dependencies:
       vue: 3.5.31(typescript@5.9.3)
 
-  '@antdv-next/x@0.0.3(antdv-next@1.1.7(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))':
+  '@antdv-next/x@0.3.0(antdv-next@1.1.7(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))':
     dependencies:
       '@ant-design/fast-color': 3.0.1
       '@antdv-next/cssinjs': 1.0.6(vue@3.5.31(typescript@5.9.3))
@@ -4918,6 +4928,8 @@ snapshots:
       safer-buffer: 2.1.2
 
   inherits@2.0.4: {}
+
+  install@0.13.0: {}
 
   internmap@1.0.1: {}
 

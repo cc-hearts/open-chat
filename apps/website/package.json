@@ -13,6 +13,7 @@
     "@antdv-next/x-markdown": "catalog:",
     "@antdv-next/x-sdk": "catalog:",
     "antdv-next": "catalog:",
+    "install": "catalog:",
     "vue": "catalog:"
   },
   "devDependencies": {
