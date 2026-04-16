@@ -150,12 +150,13 @@ const models = ref<ModelInfo[]>([]);
 const content = ref("");
 const conversationsOpen = ref(true);
 const currentConversationKey = ref<string>("");
-const currentModel = ref("qwen-plus");
+const currentModel = ref("Qwen3.5-35B-A3B");
 const thinkingEnabled = ref(true);
 const showWelcome = ref(true);
 const isHydrating = ref(true);
 const thinkExpandedMap = ref<Record<string, boolean>>({});
 const thinkDoneMap = ref<Record<string, boolean>>({});
+const activeRequestConversationKey = ref<string>("");
 let persistTimer: ReturnType<typeof setTimeout> | null = null;
 
 const getMessagePreview = (content: string, maxLength: number = 20): string => {
@@ -223,6 +224,13 @@ const modelOptions = computed(() => {
   );
 });
 
+const modelProviderMap = computed<Record<string, string>>(() => {
+  const entries = models.value.flatMap((providerInfo) =>
+    providerInfo.models.map((modelName) => [modelName, providerInfo.name] as const),
+  );
+  return Object.fromEntries(entries);
+});
+
 const modelDropdownItems = computed<MenuProps["items"]>(() => {
   return modelOptions.value.map((opt) => ({
     key: opt.value,
@@ -237,9 +245,17 @@ const getCurrentConversation = (): ConversationItemType | undefined => {
 };
 
 const isInDraftMode = computed(() => !currentConversationKey.value);
+const currentConversationMessages = computed<DefaultMessageInfo<XModelMessage>[]>(() => {
+  const conv = getCurrentConversation();
+  return conv?.messages ?? [];
+});
 
-const updateCurrentConversationMessages = (newMessages: DefaultMessageInfo<XModelMessage>[]) => {
-  const conv = conversationList.value.find((c) => c.key === currentConversationKey.value);
+const updateConversationMessages = (
+  conversationKey: string,
+  newMessages: DefaultMessageInfo<XModelMessage>[],
+) => {
+  if (!conversationKey) return;
+  const conv = conversationList.value.find((c) => c.key === conversationKey);
   if (!conv) return;
 
   conv.messages = newMessages;
@@ -260,14 +276,12 @@ const updateCurrentConversationMessages = (newMessages: DefaultMessageInfo<XMode
 const handleNewConversation = () => {
   // 草稿态下重复点击只提示，不重复创建
   if (isInDraftMode.value) {
-    setMessages([]);
     showWelcome.value = true;
     message.info("当前已经是新对话");
     return;
   }
 
   currentConversationKey.value = "";
-  setMessages([]);
   showWelcome.value = true;
 };
 
@@ -275,7 +289,6 @@ const handleActiveChange: ConversationsProps["onActiveChange"] = (key) => {
   currentConversationKey.value = key;
   const conv = getCurrentConversation();
   if (conv) {
-    setMessages(conv.messages);
     showWelcome.value = conv.messages.length === 0;
   }
 };
@@ -285,9 +298,9 @@ const handleSidebarToggle = () => {
 };
 
 const resetToDraftConversation = () => {
+  activeRequestConversationKey.value = "";
   conversationList.value = [];
   currentConversationKey.value = "";
-  setMessages([]);
   showWelcome.value = true;
 };
 
@@ -320,7 +333,11 @@ const handleClearLocalHistory = async () => {
   const confirmed = window.confirm("确定清空本地聊天记录吗？此操作不可恢复。");
   if (!confirmed) return;
 
-  abort();
+  if (isRequesting.value) {
+    message.warning("回答生成中，请先手动停止后再清空历史");
+    return;
+  }
+
   await clearChatState();
   resetToDraftConversation();
 };
@@ -381,7 +398,11 @@ const handleImportLocalHistory = async (file: File) => {
       return;
     }
 
-    abort();
+    if (isRequesting.value) {
+      message.warning("回答生成中，请先手动停止后再导入日志");
+      return;
+    }
+
     applyPersistedState(importedState);
     await saveChatState({
       ...importedState,
@@ -410,11 +431,17 @@ loadModels();
 
 // ============ XChat 配置 ============
 
+const resolveProviderByModel = (model: string): string => {
+  return modelProviderMap.value[model] || models.value[0]?.name || "openai";
+};
+
 const createProvider = (model: string) => {
+  const providerName = resolveProviderByModel(model);
+
   return new DeepSeekChatProvider({
     request: XRequest<XModelParams, XModelResponse>(`${API_BASE_URL}/api/chat/completions`, {
       manual: true,
-      params: { model, stream: true },
+      params: { model, provider: providerName, stream: true } as XModelParams,
       streamTimeout: 60000,
     }),
   });
@@ -459,10 +486,19 @@ const { onRequest, messages, setMessages, isRequesting, abort, onReload } = useX
   requestPlaceholder: () => ({ content: "请稍候...", role: "assistant" }),
 });
 
+watch(isRequesting, (requesting) => {
+  if (!requesting) {
+    activeRequestConversationKey.value = "";
+  }
+});
+
 // 监听消息变化，同步到对话列表
 watch(
   messages,
   (newMessages) => {
+    const conversationWriteKey = activeRequestConversationKey.value || currentConversationKey.value;
+    const thinkNamespace = conversationWriteKey || "__draft__";
+
     const nextExpandedMap: Record<string, boolean> = {};
     const nextDoneMap: Record<string, boolean> = {};
 
@@ -476,7 +512,7 @@ watch(
         return;
       }
 
-      const key = String(id);
+      const key = `${thinkNamespace}::${String(id)}`;
       const prevDone = thinkDoneMap.value[key];
       const prevExpanded = thinkExpandedMap.value[key];
 
@@ -501,8 +537,7 @@ watch(
     thinkExpandedMap.value = nextExpandedMap;
     thinkDoneMap.value = nextDoneMap;
 
-    updateCurrentConversationMessages(newMessages);
-    showWelcome.value = newMessages.length === 0;
+    updateConversationMessages(conversationWriteKey, newMessages);
     schedulePersistState();
   },
   { deep: true },
@@ -524,7 +559,6 @@ onMounted(async () => {
   } else {
     conversationList.value = [];
     currentConversationKey.value = "";
-    setMessages([]);
     showWelcome.value = true;
   }
 
@@ -541,7 +575,7 @@ onBeforeUnmount(() => {
 // ============ 消息转换 ============
 
 const bubbleItems = computed<BubbleItemType[]>(() =>
-  messages.value.map(({ id, message, status }) => ({
+  currentConversationMessages.value.map(({ id, message, status }) => ({
     key: id,
     role: message.role,
     status,
@@ -561,7 +595,7 @@ const bubbleItems = computed<BubbleItemType[]>(() =>
                     type: "text",
                     icon: h(SyncOutlined),
                     style: { marginInlineEnd: "auto" },
-                    onClick: () => onReload(id, { userAction: "retry" }),
+                    onClick: () => handleReloadMessage(id),
                   }),
                 ],
               },
@@ -582,7 +616,8 @@ const roleConfig = computed<BubbleListProps["role"]>(() => ({
       const nodes = [];
 
       if (parsedThink.thinkContent) {
-        const thinkKey = String(info?.key ?? "");
+        const thinkNamespace = currentConversationKey.value || "__draft__";
+        const thinkKey = `${thinkNamespace}::${String(info?.key ?? "")}`;
         const expanded = thinkExpandedMap.value[thinkKey] ?? !parsedThink.thinkDone;
 
         nodes.push(
@@ -641,6 +676,9 @@ const handleSubmit = (nextContent: string) => {
     currentConversationKey.value = String(newConversation.key);
   }
 
+  setMessages(currentConversationMessages.value);
+  activeRequestConversationKey.value = currentConversationKey.value;
+
   showWelcome.value = false;
   onRequest({
     messages: [{ role: "user", content: nextContent }],
@@ -661,6 +699,11 @@ const handleModelChange = (key: string) => {
 
 const handleThinkingChange = (value: boolean) => {
   thinkingEnabled.value = value;
+};
+
+const handleReloadMessage = (messageId: string | number) => {
+  setMessages(currentConversationMessages.value);
+  onReload(messageId, { userAction: "retry" });
 };
 </script>
 
@@ -687,7 +730,7 @@ const handleThinkingChange = (value: boolean) => {
 
       <!-- 消息列表区域（上下布局） -->
       <ChatMessages
-        :show-welcome="showWelcome && messages.length === 0"
+        :show-welcome="showWelcome && currentConversationMessages.length === 0"
         :bubble-items="bubbleItems"
         :role-config="roleConfig"
         @prompt-click="handlePromptClick"

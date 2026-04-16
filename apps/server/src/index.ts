@@ -13,14 +13,15 @@ const HOST = process.env.HOST || "localhost";
 // AI Provider 配置
 const AI_PROVIDERS = {
   qwen: {
-    baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    baseURL: process.env.QWEN_BASE_URL,
     apiKey: process.env.QWEN_API_KEY,
     defaultModel: "qwen-plus",
   },
   openai: {
     baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1",
     apiKey: process.env.OPENAI_API_KEY,
-    defaultModel: "gpt-3.5-turbo",
+    defaultModel: process.env.OPENAI_DEFAULT_MODEL,
+    forceModel: process.env.OPENAI_FORCE_MODEL,
   },
 };
 
@@ -83,8 +84,8 @@ app.post("/api/chat/completions", async (req: Request, res: Response) => {
       });
     }
 
-    const selectedModel = model || aiProvider.defaultModel;
-
+    const selectedModel = (aiProvider as any).forceModel || model || aiProvider.defaultModel;
+    console.log("selectedModel", selectedModel);
     console.log(`Using AI provider: ${aiProvider.name}, model: ${selectedModel}`);
 
     // Forward request to AI provider
@@ -153,10 +154,17 @@ app.post("/api/chat/completions", async (req: Request, res: Response) => {
 app.get("/api/models", (req: Request, res: Response) => {
   const providers = [];
 
-  if (AI_PROVIDERS.qwen.apiKey) {
+  // if (AI_PROVIDERS.qwen.apiKey) {
+  //   providers.push({
+  //     name: "qwen",
+  //     models: ["qwen-turbo", "qwen-plus", "qwen-max", "qwen-max-longcontext"],
+  //   });
+  // }
+
+  if (AI_PROVIDERS.openai.apiKey) {
     providers.push({
-      name: "qwen",
-      models: ["qwen-turbo", "qwen-plus", "qwen-max", "qwen-max-longcontext"],
+      name: "openai",
+      models: ["Qwen3.5-35B-A3B"],
     });
   }
 
